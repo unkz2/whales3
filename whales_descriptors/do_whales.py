@@ -18,83 +18,34 @@ import numpy as np
 import pandas as ps
 import rdkit.Chem as Chem
 
-from .lcm import *
-from .mol_properties import *
-
-def main(suppl, charge_threshold=0, do_charge=True, property_name=''):
-    """
-    main function for calculating WHALES descriptors, starting from the imported molecules.
-    descriptors are calculated for each molecule after sanitization.
-    ====================================================================================================================
-    :param
-    suppl: rdkit supplier
-    lcm_thr: threshold for neglecting a certain partial charge range (default = 0)
-    do_charge: if True, Gasteiger partial charges are computed
-    property_name: name of the column containing partial charges (mandatory if do_charge is False)
-    :returns
-    x (n_mol,p): descriptor matrix, each row corresponds to a molecule
-    labels (1,p): descriptor labels
-    ====================================================================================================================
-    Francesca Grisoni, 05/2018, v. beta
-    ETH Zurich & University of Milano-Bicocca
-    """
-
-    t = time.time()  # for elapsed time
-
-    print(" ")
-    print("WHALES descriptors, v. 1.1")
-    print(" Last update: 20 July 2018")
-    print(" ")
-
-    # initialization
-    descriptors = ps.DataFrame()
-    index = 0
-    errors = 0
-
-    print(" ")
-    print(" ... calculation started.")
-    # extract molecules
-    for mol in suppl:  # loops over molecules
-
-        # display
-        index += 1
-        if index % 100 == 0:
-            print(f'Mol: {str(index)}')
-
-        # check for correct molecule import, throw an error if import/sanitization fail
-        mol, err = import_mol(mol)
-
-        if err == 1:
-            x = np.full((33,), -999.0)
-            errors += err
-            print('Molecule no. ' + str(index) + ' not loaded.')
-        else:
-            # coordinates and partial charges (checks for computed charges)
-            coords, w, err = get_coordinates_and_prop(mol, property_name, do_charge)
-            if err == 0:   # no errors in charge
-                # does descriptors
-                x, lab = do_lcd(coords, w, charge_threshold)
-            else:
-                x = np.full((33,), -999.0)
-                errors += 1
-                print(f'Molecule no. {str(index)}: no computed charges.')
-
-        # stores the molecular descriptors
-        descriptors[str(index)] = x
-
-    # display time
-    elapsed = time.time() - t
-    print('Time elapsed ' + str(round(elapsed, 0)) + ' seconds.')
-    descriptors = ps.DataFrame.transpose(descriptors)
-
-    # display errors
-    if errors > 0:
-        print (str(errors) + ' molecules not loaded/calculated')
-
-    return descriptors, lab
-
+import lcm
+import mol_properties
 
 # ----------------------------------------------------------------------------------------------------------------------
+def whales_from_mol(mol, charge_threshold=0, do_charge=True, property_name=''):
+    # check for correct molecule import, throw an error if import/sanitization fail
+
+    mol, err = import_mol(mol)
+    errors = 0
+
+    if err == 1:
+        x = np.full((33,), -999.0)
+        errors += err
+        print('Molecule not loaded.')
+    else:
+        # coordinates and partial charges (checks for computed charges)
+        coords, w, err = mol_properties.get_coordinates_and_prop(mol, property_name, do_charge)
+        if err == 0:  # no errors in charge
+            # does descriptors
+            x, lab = do_lcd(coords, w, charge_threshold)
+        else:
+            x = np.full((33,), -999.0)
+            errors += 1
+            print('No computed charges.')
+
+    return x, lab
+
+
 def import_mol(mol):
     # options for sanitization
     san_opt = Chem.SanitizeFlags.SANITIZE_ALL ^ Chem.SanitizeFlags.SANITIZE_KEKULIZE
@@ -128,7 +79,7 @@ def do_lcd(coords, w, thr):
     """
 
     # calculates lcm with weight scheme 1 (all charges)
-    res = lmahal(coords, w)
+    res = lcm.lmahal(coords, w)
 
     # applies sign
     res = apply_sign(w, res, thr)
@@ -189,7 +140,7 @@ def extract_lcm(data, start=0, end=100, step=10, lab_string=''):
     labels = list()
     for j in strings:
         for i in perc:
-            labels.append(j + lab_string + str(i / 10))
+            labels.append(j + lab_string + str(int(i / 10)))
 
     return x, labels
 

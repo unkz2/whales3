@@ -2,6 +2,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem import Draw
 import ChemTools as tools
+import do_whales
 from ChemTools import prepare_mol_from_sdf
 
 import numpy as np 
@@ -10,6 +11,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt 
 
 from pathlib import Path
+
 
 class whales: 
     def __init__(self, drug_file, query_file, out_dir):
@@ -21,7 +23,7 @@ class whales:
 
         if self.template is None: 
             self.read_template()
-            # self.error_in_template()
+            self.error_in_template()
             self.read_library()
 
 
@@ -30,6 +32,8 @@ class whales:
             mol = file.read()
 
         self.template = Chem.MolFromSmiles(mol)
+
+        self.mol_2_png(self.template, "template.png")
 
 
     def error_in_template(self): 
@@ -49,14 +53,21 @@ class whales:
 
 
     def mol_2_png(self, mol, name): 
-        return Draw.MolToFile(mol, name)
+        Draw.MolToFile(mol, name)
+        plt.show()
 
 
-    def to_whales(self): 
+    def to_whales(self, vs_library): 
         whales_library = []
         lab = []
 
-        for mol in self.vs_library: 
+        mol_type = str(type(vs_library))
+        
+        if "Mol" in mol_type: 
+                whales_temp, lab = do_whales.whales_from_mol(vs_library)
+                return  pd.DataFrame(whales_temp.reshape(-1, len(whales_temp)),index=['template'],columns=lab)
+
+        for mol in vs_library: 
             whales_temp, lab = do_whales.whales_from_mol(mol)
             whales_library.append(whales_temp)
 

@@ -22,9 +22,20 @@ def main():
 
     print("Initating WHALES...")
     whales_inst = whales(drug_args.input, drug_args.query_lib, out_dir)
-    whales_inst.get_template_property()
+
+    # print("Drawing template partial charge map...")
+    # whales_inst.get_template_property()
+
+    print(whales_inst.template)
+    print("Calculating WHALES descriptors for the template...")
+    template_whales = whales_inst.to_whales(whales_inst.template)
+
+    print("Calculating WHALES descriptors for the library...")
+    library_whales = whales_inst.to_whales(whales_inst.vs_library)
 
 
+    print(template_whales.head())
+    print(library_whales.head())
 
 
 

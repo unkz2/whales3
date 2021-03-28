@@ -17,17 +17,21 @@ class whales:
 
 
     def read_template(file_name): 
+        print("Reading template SMILES file.")
         mol = Chem.MolFromMolFile(file_name)
 
         return Chem.MolToSmiles(mol)
 
 
     def error_in_template(file_name): 
+        # print("Looking at template structural errors...")
         mol = read_template(file_name)
         return AllChem.Communications(mol)
 
 
-    def read_library(file_name): 
+    def read_library(self): 
+        print("Turning library into WHALES descriptors...")
+
         vs_library_2D = Chem.SDMolSupplier(file_name)
         vs_library = prepare_mol_from_sdf(file_name)
         
@@ -39,10 +43,13 @@ class whales:
 
 
     def mol_to_png(mol, name): 
-        return Draw.MolToFile(mol, name)
+        Draw.MolToFile(mol, name)
+        plt.savefig("name.png")
+        print(f"{name} saved as PNG")
+        plt.show()
 
 
-    def to_whales(vs_library): 
+    def to_whales(self, vs_library): 
         whales_library = []
         lab = []
 

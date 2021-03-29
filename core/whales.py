@@ -21,19 +21,6 @@ class whales:
         self.query_file = str(query_file) 
         self.out_dir = str(out_dir)
 
-        self.template = None
-
-
-        if self.template is None: 
-            self.read_template()
-            self.error_in_template()
-            self.read_library()
-            self.prepare_mol()
-            self.vs_to_scaffold()
-
-
-            self.hits_to_scafoold()
-            self.get_frequents()
 
 
 
@@ -89,13 +76,12 @@ class whales:
         return pd.DataFrame(whales_library, columns=lab)
 
 
-    def normalize(self, whales_library, aver=0): 
-        aver = np.array(aver)
-        if aver.all() == 0: 
-            self.aver = whales_library.mean()
-            self.sdv = whales_library.std()
+    def normalize(self, whales_library, aver=0, sdv=0): 
+        if "int" in str(type(aver)): 
+            aver = whales_library.mean()
+            sdv = whales_library.std()
 
-        return (whales_library - self.aver) / self.sdv, self.aver
+        return (whales_library -aver) / sdv, aver, sdv
 
 
     def plot_box(self, data, name): 
@@ -105,12 +91,11 @@ class whales:
         plt.savefig(f"{self.out_dir}/{name}.png")
 
 
-    def calc_euclidean(self, norm_template_whales, norm_library_whales): 
-        distance_matrix = euclidean_distances(norm_template_whales, norm_library_whales)
+    def calc_euclidean(self): 
+        distance_matrix = euclidean_distances(self.norm_whales_template, self.norm_whales_library)
 
         self.sort_index = np.argsort(distance_matrix)
-        self.dist_neighbors = distance_matrix[:,sort_index]
-
+        self.dist_neighbors = distance_matrix[:,self.sort_index]
 
         k = 10 
         self.neighbor_ID = self.sort_index[:,0:k]
@@ -127,6 +112,7 @@ class whales:
         results = Draw.MolsToGridImage(self.freq_scaffolds_library[:k],molsPerRow=2,subImgSize=(200,200),legends=[x.GetProp("_Name") for x in self.freq_scaffolds_library[:k]])
 
         results.save(f'{self.out_dir}/output.png')
+
 
     def _get_frequent_scaffold(self, data): 
         return tools.frequent_scaffolds(data)
@@ -147,3 +133,43 @@ class whales:
 
     def get_frequency(self): 
        self. SD_rel = len(self.freq_scaffolds_library)/len(self.vs_library)*100
+
+
+
+    def run(self): 
+        self.read_template()
+        self.error_in_template()
+        self.read_library()
+        self.prepare_mol()
+
+        print("Calculating WHALES descriptors for the template...")
+        self.library_whales = self.to_whales(self.vs_library)
+        print("Calculating WHALES descriptors for the library...")
+        self.template_whales = self.to_whales(self.template)
+        print("Done.\n")
+
+
+        print(self.template_whales.head())
+
+        print("Normalizing scores...")
+        self.norm_whales_library, aver, sdv = self.normalize(self.library_whales)
+        self.norm_whales_template, average, sdt = self.normalize(self.template_whales, aver=aver, sdv=sdv)
+
+        print("Writing normalized WHALES library to file.")
+        self.norm_whales_library.to_csv(f"{self.out_dir}/library.csv")
+
+        print("Building boxplot for the library.")
+        self.plot_box(self.norm_whales_library, "library")
+        print("Done.\n")
+
+        print(self.norm_whales_template)
+
+        print("Calculating Euclidean distances...")
+        self.calc_euclidean()
+
+        print("Calulating Euclidean distance...")
+        self.hits_to_scafoold()
+        print("Done.\n")
+
+        self.get_frequents()
+        self.draw_scaffold()

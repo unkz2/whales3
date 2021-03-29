@@ -1,3 +1,4 @@
+
 from parse_drugs import parse_args
 from retrieve_drugs import search_chembl
 from retrieve_drugs import mols_2_sdf
@@ -32,14 +33,27 @@ def main():
 
     print("Calculating WHALES descriptors for the library...")
     library_whales = whales_inst.to_whales(whales_inst.vs_library)
+    print("Done.\n")
+
+    print("Normalizing scores...")
+    norm_whales_library, average = whales_inst.normalize(library_whales)
+    norm_whales_template, average = whales_inst.normalize(template_whales, average)
+    print("Done.\n")
 
 
-    print(template_whales.head())
-    print(library_whales.head())
+
+    whales_inst.plot_box(norm_whales_library, "library")
 
 
+    print("Calulating Euclidean distance...")
+    whales_inst.calc_euclidean(norm_whales_template, norm_whales_library)
+    whales_inst.vs_to_scaffold()
+    whales_inst.hits_to_scafoold()
+    print("Done.\n")
 
-
+    print("Estimating closest hit scaffolds...")
+    print("Writing results to file.")
+    whales_inst.draw_scaffold()
 
 if __name__ == '__main__': 
     main()

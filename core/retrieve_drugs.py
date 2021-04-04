@@ -2,13 +2,8 @@ from pathlib import Path
 
 import requests
 import re
+import ujson
 
-# import logging
-# logging.basicConfig()
-# logging.getLogger().setLevel(logging.DEBUG)
-# logging.getLogger('foo').debug('bah')
-# logging.getLogger().setLevel(logging.INFO)
-# logging.getLogger('foo').debug('bah')
 
 def main():
     query = "painkillers"
@@ -18,7 +13,7 @@ def main():
 
 
 def search_chembl(query_compounds): 
-    url = "https://www.ebi.ac.uk/chembl/api/data/molecule/search?q="
+    url = "https://www.ebi.ac.uk/chembl/api/data/molecule/search?format=json&q="
     query = url + query_compounds
 
     response = requests.get(query, headers={ "Content-Type" : "application/json"})
@@ -26,8 +21,12 @@ def search_chembl(query_compounds):
     return get_mol(response)
 
 
-def get_mol(r): 
-    return re.findall(r'<molfile>([^<]*)?</molfile>', r.text)
+def get_mol(r):
+    data = ujson.loads(r.text)
+    molfiles = []
+    for x in data['molecules']:
+        molfiles.append(x['molecule_structures']['molfile'])
+    return molfiles
 
 
 def mols_2_sdf(mols, file_name): 
@@ -35,6 +34,8 @@ def mols_2_sdf(mols, file_name):
         for mol in mols: 
             output.write(mol)
             output.write("$$$$\n")
+
+
 
 if __name__ == "__main__": 
     main()

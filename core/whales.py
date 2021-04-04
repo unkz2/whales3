@@ -14,6 +14,7 @@ from pathlib import Path
 from rdkit.Chem.Scaffolds import MurckoScaffold
 from sklearn.metrics.pairwise import euclidean_distances
 
+from multiprocessing import Pool
 
 class whales: 
     def __init__(self, drug_file, query_file, out_dir):
@@ -21,10 +22,16 @@ class whales:
         self.query_file = str(query_file) 
         self.out_dir = str(out_dir)
 
+    
+    def mp_prepare_mol(self, data): 
+        self.mol, self.err = tools.prepare_mol(data)
 
     def prepare_mol(self): 
-        self.mol, self.err = tools.prepare_mol(self.template)
+        p = Pool()
+        p.starmap(self.prepare_mol,  [() for _ in range(10)])
 
+        p.close()
+        p.join()
 
     def read_template(self): 
         with open(self.drug_file, "r") as file: 

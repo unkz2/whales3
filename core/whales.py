@@ -22,8 +22,6 @@ class whales:
         self.out_dir = str(out_dir)
 
 
-
-
     def prepare_mol(self): 
         self.mol, self.err = tools.prepare_mol(self.template)
 
@@ -120,11 +118,12 @@ class whales:
 
     def hits_to_scafoold(self): 
         self.hits = []
-        self.smiles_hits = []
+        smiles_hits = []
         for j in np.nditer(self.neighbor_ID):
             self.hits.append(self.vs_library_2D[int(j)])
-            self.smiles_hits.append(Chem.MolToSmiles(self.mol))
-
+            smiles_hits.append(Chem.MolToSmiles(self.mol))
+    
+        self.smiles_hits = smiles_hits
 
     def get_frequents(self): 
         self.freq_scaffold_hits = self._get_frequent_scaffold(self.hits)
@@ -133,7 +132,6 @@ class whales:
 
     def get_frequency(self): 
        self. SD_rel = len(self.freq_scaffolds_library)/len(self.vs_library)*100
-
 
 
     def run(self): 

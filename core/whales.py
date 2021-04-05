@@ -22,16 +22,9 @@ class whales:
         self.query_file = str(query_file) 
         self.out_dir = str(out_dir)
 
-    
-    def mp_prepare_mol(self, data): 
-        self.mol, self.err = tools.prepare_mol(data)
 
     def prepare_mol(self): 
-        p = Pool()
-        p.starmap(self.prepare_mol,  [() for _ in range(10)])
-
-        p.close()
-        p.join()
+        self.mol, self.err = tools.prepare_mol(self.template)
 
     def read_template(self): 
         with open(self.drug_file, "r") as file: 
@@ -49,8 +42,9 @@ class whales:
         library = str(library)
 
         self.vs_library_2D = Chem.SDMolSupplier(library)
+
         self.vs_library = prepare_mol_from_sdf(library)
-        
+
 
     def get_template_property(self): 
         return tools.do_map(self.template, lab_atom=True)
@@ -152,9 +146,6 @@ class whales:
         print("Calculating WHALES descriptors for the library...")
         self.template_whales = self.to_whales(self.template)
         print("Done.\n")
-
-
-        print(self.template_whales.head())
 
         print("Normalizing scores...")
         self.norm_whales_library, aver, sdv = self.normalize(self.library_whales)

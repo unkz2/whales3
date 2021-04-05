@@ -44,12 +44,9 @@ class whales:
         library = Path(self.out_dir) / "query.sdf"
         library = str(library)
 
-        self.vs_library_2D = MultithreadedSDMolSupplier(library)
-        # self.vs_library_2D = Chem.SDMolSupplier(library)
+        self.vs_library_2D = list(MultithreadedSDMolSupplier(library))[:-1]
 
-        print("library")
-        print(self.vs_library_2D)
-
+        # self.vs_library_2D = Chem.SDMolSupplier(library
         self.vs_library = prepare_mol_from_sdf(library)
 
 
@@ -108,9 +105,10 @@ class whales:
 
 
     def vs_to_scaffold(self): 
+
         self.scaffold_vs = [] 
         for mol in self.vs_library_2D:
-            self.scaffold_vs.append(MurckoScaffold.GetScaffoldForMol(self.mol))
+            self.scaffold_vs.append(MurckoScaffold.GetScaffoldForMol(mol))
 
 
     def draw_scaffold(self): 
@@ -125,13 +123,10 @@ class whales:
 
 
     def hits_to_scafoold(self): 
-        lib_2D_list = list(self.vs_library_2D)
-        print(lib_2D_list)
         self.hits = []
         smiles_hits = []
         for j in np.nditer(self.neighbor_ID):
-            print(int(j))
-            self.hits.append(lib_2D_list[int(j)])
+            self.hits.append(self.vs_library_2D[int(j)])
             smiles_hits.append(Chem.MolToSmiles(self.mol))
     
         self.smiles_hits = smiles_hits
@@ -178,4 +173,7 @@ class whales:
         print("Done.\n")
 
         self.get_frequents()
+
+        print("Finally, writing candidate scaffolds to file.")
         self.draw_scaffold()
+        print("\nDone.")

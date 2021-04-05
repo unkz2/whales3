@@ -1,20 +1,20 @@
+from multiprocessing import Pool
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
 from rdkit import Chem
-from rdkit.Chem import AllChem
-from rdkit.Chem import Draw
+from rdkit.Chem import AllChem, Draw
+from rdkit.Chem.rdmolfiles import MultithreadedSDMolSupplier
+from rdkit.Chem.Scaffolds import MurckoScaffold
+from sklearn.metrics.pairwise import euclidean_distances
+
 import ChemTools as tools
 import do_whales
 from ChemTools import prepare_mol_from_sdf
 
-import numpy as np 
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt 
-
-from pathlib import Path
-from rdkit.Chem.Scaffolds import MurckoScaffold
-from sklearn.metrics.pairwise import euclidean_distances
-
-from multiprocessing import Pool
 
 class whales: 
     def __init__(self, drug_file, query_file, out_dir):
@@ -37,11 +37,17 @@ class whales:
         self.error = AllChem.Compute2DCoords(self.template)
 
 
+    def mp_process_lib(self): 
+        return Chem.SDMolSupplier(self.library)
+
     def read_library(self): 
         library = Path(self.out_dir) / "query.sdf"
         library = str(library)
 
         self.vs_library_2D = Chem.SDMolSupplier(library)
+
+        print("library")
+        print(self.vs_library_2D)
 
         self.vs_library = prepare_mol_from_sdf(library)
 

@@ -1,13 +1,12 @@
-from rdkit import Chem
-from rdkit.Chem import AllChem
-from rdkit.Chem import Draw
-import ChemTools as tools
-from ChemTools import prepare_mol_from_sdf
-
-import numpy as np 
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
-import matplotlib.pyplot as plt 
+from rdkit import Chem
+from rdkit.Chem import AllChem, Draw
+
+import ChemTools as tools
+from ChemTools import prepare_mol_from_sdf
 
 
 class whales: 

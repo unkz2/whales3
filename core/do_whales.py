@@ -21,6 +21,7 @@ import rdkit.Chem as Chem
 import lcm
 import mol_properties
 
+
 # ----------------------------------------------------------------------------------------------------------------------
 def whales_from_mol(mol, charge_threshold=0, do_charge=True, property_name=''):
     # check for correct molecule import, throw an error if import/sanitization fail

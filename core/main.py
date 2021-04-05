@@ -1,13 +1,11 @@
 
-from parse_drugs import parse_args
-from retrieve_drugs import search_chembl
-from retrieve_drugs import mols_2_sdf
-
-
-from whales import whales
 from pathlib import Path
 
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+
+from parse_drugs import parse_args
+from retrieve_drugs import mols_2_sdf, search_chembl
+from whales import whales
 
 
 def main(): 

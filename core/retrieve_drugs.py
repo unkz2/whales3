@@ -1,7 +1,7 @@
+import re
 from pathlib import Path
 
 import requests
-import re
 import ujson
 
 

@@ -2,10 +2,9 @@
 #   - molecule sanitization (check in "import_prepare_mol" to change advanced sanitiization settings")
 #   - geometry optimization (if specified by "do_geom = True"), with the specified settings
 
-from rdkit.Chem import AllChem
-from rdkit.Chem import rdmolops
-from rdkit import Chem
 import numpy as np
+from rdkit import Chem
+from rdkit.Chem import AllChem, rdmolops
 
 
 def prepare_mol_from_sdf(filename_in, do_geometry=True, do_charge=False, property_name='_GasteigerCharge', max_iter=1000,
@@ -156,9 +155,9 @@ def check_mol(mol, property_name, do_charge):
 def do_map(mol, fig_name=None, lab_atom=False, text=False, MapMin=0, MapMax=1):
 
     # settings
-    from rdkit.Chem.Draw import SimilarityMaps
-    import matplotlib.pyplot as plt
     import matplotlib
+    import matplotlib.pyplot as plt
+    from rdkit.Chem.Draw import SimilarityMaps
 
     scale = -1  # size of dots
     coordscale = 1  # coordinate scaling

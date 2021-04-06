@@ -21,11 +21,23 @@ def search_chembl(query_compounds):
     return get_mol(response)
 
 
+def walk(node, results):
+    if isinstance(node, list):
+        for i in node:
+            walk(i, results)
+    elif isinstance(node, dict):
+        for key, item in node.items():
+            if isinstance(item, str):
+                if key == 'molfile':
+                    results.append(item)
+            else:
+                walk(item, results)
+
+
 def get_mol(r):
     data = ujson.loads(r.text)
     molfiles = []
-    for x in data['molecules']:
-        molfiles.append(x['molecule_structures']['molfile'])
+    walk(data, molfiles)
     return molfiles
 
 

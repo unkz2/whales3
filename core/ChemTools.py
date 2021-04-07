@@ -5,28 +5,31 @@
 import numpy as np
 from rdkit import Chem
 from rdkit.Chem import AllChem, rdmolops
+import functools
+import multiprocessing as mp
+from rdkit.Chem.rdmolfiles import MultithreadedSDMolSupplier
 
 
 def prepare_mol_from_sdf(filename_in, do_geometry=True, do_charge=False, property_name='_GasteigerCharge', max_iter=1000,
-                       mmffvariant='MMFF94', seed=26, max_attempts=100):
+                       mmffvariant='MMFF94', seed=26, max_attempts=100):    
 
-    vs_library = Chem.SDMolSupplier(filename_in)
+    vs_library = list(MultithreadedSDMolSupplier(filename_in))[:-1]
     vs_library_prepared = []
 
     cnt = 0
     nmol = len(vs_library)
+    parallel = True
+    if parallel:
+        wrapper = functools.partial(prepare_mol, do_geometry=do_geometry, do_charge=do_charge, property_name=property_name, max_iter=max_iter, mmffvariant=mmffvariant, seed=seed, max_attempts=max_attempts)
+        with Pool() as pool: 
+            for idx, (mol, err) in enumerate(pool.imap(wrapper, vs_library)):
+                if err == 1:
+                    print(f'Molecule {idx} of {nmol} not computed.')
+                vs_library_prepared.append(mol)
 
-    for mol in vs_library:
-        cnt += 1
-        if cnt % 50 == 0:
-            print('Molecule: ' + str(cnt))
-
-        mol, err = prepare_mol(mol, do_geometry, do_charge, property_name, max_iter, mmffvariant, seed, max_attempts)
-
-        if err == 1:
-            print ('Molecule ' + str(cnt) + ' of ' + str(nmol) + ' not computed.')
-        vs_library_prepared.append(mol)
+    print(f"prepared library: {len(vs_library_prepared)}")
     return vs_library_prepared
+
 
 def prepare_mol(mol, do_geometry=True, do_charge=True, property_name='_GasteigerCharge', max_iter=1000,
                        mmffvariant='MMFF94', seed=26, max_attempts=5):

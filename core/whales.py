@@ -44,7 +44,11 @@ class whales:
         library = Path(self.out_dir) / "query.sdf"
         library = str(library)
 
+
+        # self.vs_library_2D = Chem.SDMolSupplier(library)
         self.vs_library_2D = list(MultithreadedSDMolSupplier(library))[:-1]
+
+        print(len(self.vs_library_2D))
 
         # self.vs_library_2D = Chem.SDMolSupplier(library
         self.vs_library = prepare_mol_from_sdf(library)
@@ -126,6 +130,7 @@ class whales:
         self.hits = []
         smiles_hits = []
         for j in np.nditer(self.neighbor_ID):
+            print(j)
             self.hits.append(self.vs_library_2D[int(j)])
             smiles_hits.append(Chem.MolToSmiles(self.mol))
     

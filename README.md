@@ -2,28 +2,36 @@
 
 This repo is aimed to improve on the WHALES descriptor as done by ETH Zurich, Modlab. 
 
+WHALES is a molecular descriptor that outputs the best structural analogs to a given molecule. This algorithm uses partial charges and atom-centered covariance matrices to understand compound structure in a given library. By doing this, novel scaffolds can be found out for drug discovery that bind to the same protein targets. 
 
-## Aims 
-
-Shift the code to Python 3
-Optimize the code. 
-
-
+## Usage 
+The code is easy to execute: 
+```
+$ python main.py <-in_smiles> <-in_query_lib>
+```
+For a sample example: 
+```
+ $ python  main.py -in_smiles caffeine.mol -in_query_lib erythromycin
+ ```
+ 
 ## Changelog 
 
 ### TODO
 Things that we need to work on now, 
-1. Find a neural architecture that can input the data and process on it. I have seen people using LSTMs or Attention to see which weights are more important.
+1. Optimize the code for FPGA board. 
+2. See if we can use the algorithm into an ML/DL method. 
+3. Unittest the whole module. 
+4. Tweak the WHALES algorithm to make it even better for scaffold finding, beside the partial charges and atom-centered distances. 
 
-2. We also need to be able to inverse transform these values into a structure. This is not as clear right now.
+## Output files
+The most important output file is the output.png file that gives scaffolds for the best candidate scaffold from the library of compounds. 
+  1. **query.sdf** - Contains all the entries from the Chembl database
+  2. **output.png** - Most frequent scaffolds that best match the query molecular scaffold
 
-3. Optimize the code. Some of the functions are inefficient in terms of numpy usage. 
-### Changelog
-Here are the following contributions: 
-1. The do_whales.py file has been shifted from Python 2.7 to 3.7. The function do_lcm uses pandas’ methods. Also converted the print functions. Mostly minor changes.
+![output](https://user-images.githubusercontent.com/25282805/114075513-0da49f00-98bf-11eb-9dd1-bf1402cff156.png)
+  
+  3. **library.png** - A seaborn boxplot for the given distribution of query compounds
 
-2. Made a mol.py file that takes the output of any ‘sdf’ with any number of molecules inside and outputs a DataFrame. This file will help us feed our outputs to a neural network later on.
+![library](https://user-images.githubusercontent.com/25282805/114075616-29a84080-98bf-11eb-87dd-ead507776743.png)
 
-### Results from experimenting on a library of 2k compounds 
-I used a data set from the Chembl database to output a csv file that has 1993 rows (for each compound) and 33 columns (for remoteness, isolation and isolation, remoteness ratio). For a library of 1993 compounds, the time complexity is 259 seconds. The algorithm encodes each molecule in roughly 10 seconds. 
-
+4. **query.csv** - Query compounds tranformed into WHALES descriptors

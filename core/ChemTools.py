@@ -21,7 +21,7 @@ def prepare_mol_from_sdf(filename_in, do_geometry=True, do_charge=False, propert
     parallel = True
     if parallel:
         wrapper = functools.partial(prepare_mol, do_geometry=do_geometry, do_charge=do_charge, property_name=property_name, max_iter=max_iter, mmffvariant=mmffvariant, seed=seed, max_attempts=max_attempts)
-        with Pool() as pool: 
+        with mp.Pool() as pool: 
             for idx, (mol, err) in enumerate(pool.imap(wrapper, vs_library)):
                 if err == 1:
                     print(f'Molecule {idx} of {nmol} not computed.')

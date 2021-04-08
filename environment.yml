@@ -157,4 +157,6 @@ dependencies:
     - requests-cache==0.5.2
     - ujson==4.0.2
     - xarray==0.17.0
+    - name: Setup Miniconda
+  uses: conda-incubator/setup-miniconda@v2.1.1
 prefix: /home/nadzhou/anaconda3/envs/whales3

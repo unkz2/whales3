@@ -13,7 +13,7 @@ def main():
 
 
 def search_chembl(query_compounds): 
-    url = "https://www.ebi.ac.uk/chembl/api/data/molecule/search?format=json&q="
+    url = "https://www.ebi.ac.uk/chembl/api/data/molecule.json?limit=1000/search?format=json&q="
     query = url + query_compounds
 
     response = requests.get(query, headers={ "Content-Type" : "application/json"})

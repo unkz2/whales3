@@ -22,3 +22,7 @@ jobs:
       - name: Conda list
         shell: pwsh
         run: conda list     
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 .

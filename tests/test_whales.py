@@ -12,7 +12,7 @@ from rdkit import Chem
 class TestWhales(unittest.TestCase): 
     @classmethod
     def setUpClass(cls): 
-        cls.whales_inst = Whales("benzene.mol", "benzene.sdf", "/test_results/")
+        cls.whales_inst = Whales("benzene.mol", "benzene.sdf", "./test_results/")
 
     def test_read_template(self): 
         # Benzene mol to be tested with the class from bezene file
@@ -20,7 +20,11 @@ class TestWhales(unittest.TestCase):
         self.whales_inst.read_template()
         self.assertEqual(Chem.MolToSmiles(self.whales_inst.template), mol)
 
-    
+    def test_read_library(self): 
+        self.whales_inst.read_library()
+        self.assertNotEqual(self.whales_inst.vs_library, self.whales_inst.vs_library_2D)
+
+
 
 if __name__ == "__main__": 
     unittest.main()

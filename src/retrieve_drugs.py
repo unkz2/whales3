@@ -12,8 +12,8 @@ def main():
     mols_2_sdf(mols, "ds.sdf")
 
 
-def search_chembl(query_compounds): 
-    url = "https://www.ebi.ac.uk/chembl/api/data/molecule.json?limit=1000/search?format=json&q="
+def search_chembl(query_compounds, num_compounds=100): 
+    url = f"https://www.ebi.ac.uk/chembl/api/data/molecule.json?limit={num_compounds}/search?format=json&q="
     query = url + query_compounds
 
     response = requests.get(query, headers={ "Content-Type" : "application/json"})

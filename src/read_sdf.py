@@ -9,11 +9,10 @@ import ChemTools as tools
 from ChemTools import prepare_mol_from_sdf
 
 
-class whales: 
+class Whales: 
     def __init__(self, drug_file, query_file):
-        self.drug-file = drug_file 
+        self.drug_file = drug_file 
         self.query_file = query_file 
-
 
     def read_template(file_name): 
         print("Reading template SMILES file.")

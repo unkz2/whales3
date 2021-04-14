@@ -1,8 +1,6 @@
 import unittest 
 
 
-
-
 class TestWhales(unittest.TestCase): 
 
     @classmethod

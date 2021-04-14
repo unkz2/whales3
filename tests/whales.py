@@ -22,7 +22,6 @@ class whales:
         self.query_file = str(query_file) 
         self.out_dir = str(out_dir)
 
-
     def prepare_mol(self): 
         self.mol, self.err = tools.prepare_mol(self.template)
 
@@ -32,10 +31,8 @@ class whales:
 
         self.template = Chem.MolFromSmiles(mol)
 
-
     def error_in_template(self): 
         self.error = AllChem.Compute2DCoords(self.template)
-
 
     def mp_process_lib(self): 
         return Chem.SDMolSupplier(self.library)
@@ -43,8 +40,6 @@ class whales:
     def read_library(self): 
         library = Path(self.out_dir) / "query.sdf"
         library = str(library)
-
-
         # self.vs_library_2D = Chem.SDMolSupplier(library)
         self.vs_library_2D = list(MultithreadedSDMolSupplier(library))[:-1]
 
@@ -53,10 +48,8 @@ class whales:
         # self.vs_library_2D = Chem.SDMolSupplier(library
         self.vs_library = prepare_mol_from_sdf(library)
 
-
     def get_template_property(self): 
         return tools.do_map(self.template, lab_atom=True)
-
 
     def mol_2_png(self, mol, name): 
         number_mol = 10
@@ -65,7 +58,6 @@ class whales:
         plt.savefig(f"{self.out_dir}/{name}.png")
         plt.show()
 
-
     def to_whales(self, vs_library): 
         whales_library = []
         lab = []
@@ -73,15 +65,14 @@ class whales:
         mol_type = str(type(vs_library))
         
         if "Mol" in mol_type: 
-                whales_temp, lab = do_whales.whales_from_mol(vs_library)
-                return  pd.DataFrame(whales_temp.reshape(-1, len(whales_temp)),index=['template'],columns=lab)
+            whales_temp, lab = do_whales.whales_from_mol(vs_library)
+            return pd.DataFrame(whales_temp.reshape(-1, len(whales_temp)),index=['template'],columns=lab)
 
         for mol in vs_library: 
             whales_temp, lab = do_whales.whales_from_mol(mol)
             whales_library.append(whales_temp)
 
         return pd.DataFrame(whales_library, columns=lab)
-
 
     def normalize(self, whales_library, aver=0, sdv=0): 
         if "int" in str(type(aver)): 
@@ -90,13 +81,11 @@ class whales:
 
         return (whales_library -aver) / sdv, aver, sdv
 
-
     def plot_box(self, data, name): 
         sns.set(rc={'figure.figsize':(16,8.27)})
         sns.boxplot(data=data, linewidth=2)
         
         plt.savefig(f"{self.out_dir}/{name}.png")
-
 
     def calc_euclidean(self): 
         distance_matrix = euclidean_distances(self.norm_whales_template, self.norm_whales_library)
@@ -107,13 +96,11 @@ class whales:
         k = 10 
         self.neighbor_ID = self.sort_index[:,0:k]
 
-
     def vs_to_scaffold(self): 
 
         self.scaffold_vs = [] 
         for mol in self.vs_library_2D:
             self.scaffold_vs.append(MurckoScaffold.GetScaffoldForMol(mol))
-
 
     def draw_scaffold(self): 
         k = 10
@@ -121,10 +108,8 @@ class whales:
 
         results.save(f'{self.out_dir}/output.png')
 
-
     def _get_frequent_scaffold(self, data): 
         return tools.frequent_scaffolds(data)
-
 
     def hits_to_scafoold(self): 
         self.hits = []
@@ -139,10 +124,8 @@ class whales:
         self.freq_scaffold_hits = self._get_frequent_scaffold(self.hits)
         self.freq_scaffolds_library = self._get_frequent_scaffold(self.vs_library_2D)
 
-
     def get_frequency(self): 
        self. SD_rel = len(self.freq_scaffolds_library)/len(self.vs_library)*100
-
 
     def run(self): 
         self.read_template()

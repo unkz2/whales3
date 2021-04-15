@@ -1,12 +1,13 @@
-import sys, os
-import unittest 
+import os
+import sys
+import unittest
 
 testdir = os.path.dirname(__file__)
 srcdir = '../src'
 sys.path.insert(0, os.path.abspath(os.path.join(testdir, srcdir)))
 
-from whales import Whales
 from rdkit import Chem
+from whales import Whales
 
 
 class TestWhales(unittest.TestCase): 

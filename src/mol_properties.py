@@ -77,7 +77,6 @@ def prepare_mol(mol, property_name, do_charge):
     Francesca Grisoni, 12/2016, v. alpha
     ETH Zurich
     """
-o
     from rdkit.Chem import AllChem as Chem
     err = 0
 

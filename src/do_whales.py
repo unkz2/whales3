@@ -23,24 +23,24 @@ import mol_properties
 
 
 # ----------------------------------------------------------------------------------------------------------------------
-    def whales_from_mol(mol, charge_threshold=0, do_charge=True, property_name=''):
-        # check for correct molecule import, throw an error if import/sanitization fail
+def whales_from_mol(mol, charge_threshold=0, do_charge=True, property_name=''):
+    # check for correct molecule import, throw an error if import/sanitization fail
 
-        mol, err = import_mol(mol)
-        x = []
-        lab = []
+    mol, err = import_mol(mol)
+    x = []
+    lab = []
 
-        if err > 0:
+    if err > 0:
+        x = np.full((33,), -999.0)
+        print('Molecule not loaded.')
+    elif err == 0:
+        # coordinates and partial charges (checks for computed charges)
+        coords, w, mol_err = mol_properties.get_coordinates_and_prop(mol, property_name, do_charge)
+        if mol_err > 0:
             x = np.full((33,), -999.0)
-            print('Molecule not loaded.')
-        elif err == 0:
-            # coordinates and partial charges (checks for computed charges)
-            coords, w, mol_err = mol_properties.get_coordinates_and_prop(mol, property_name, do_charge)
-            if mol_err > 0:
-                x = np.full((33,), -999.0)
-                print('No computed charges.')
-            x, lab = do_lcd(coords, w, charge_threshold)
-        return x, lab
+            print('No computed charges.')
+        x, lab = do_lcd(coords, w, charge_threshold)
+    return x, lab
 
 
 def import_mol(mol):

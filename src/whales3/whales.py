@@ -11,9 +11,9 @@ from rdkit.Chem.rdmolfiles import MultithreadedSDMolSupplier
 from rdkit.Chem.Scaffolds import MurckoScaffold
 from sklearn.metrics.pairwise import euclidean_distances
 
-import ChemTools as tools
-import do_whales
-from ChemTools import prepare_mol_from_sdf
+import whales3.ChemTools as tools
+import whales3.do_whales as do_whales
+from whales3.ChemTools import prepare_mol_from_sdf
 
 from typing import List
 

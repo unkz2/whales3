@@ -2,18 +2,14 @@ import os
 import sys
 import unittest
 
-testdir = os.path.dirname(__file__)
-srcdir = '../src'
-sys.path.insert(0, os.path.abspath(os.path.join(testdir, srcdir)))
-
 from rdkit import Chem
-from whales import Whales
+from whales3.whales import Whales
 
 
 class TestWhales(unittest.TestCase): 
     @classmethod
     def setUpClass(cls): 
-        cls.whales_inst = Whales("benzene.mol", "benzene.sdf", "./test_results/")
+        cls.whales_inst = Whales("tests/benzene.mol", "tests/benzene.sdf", "tests/test_results/")
         cls.whales_inst.read_template()
         cls.whales_inst.prepare_template()
         cls.whales_inst.error_in_template()

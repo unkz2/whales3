@@ -18,8 +18,8 @@ import numpy as np
 import pandas as ps
 import rdkit.Chem as Chem
 
-import lcm
-import mol_properties
+import whales3.lcm as lcm
+import whales3.mol_properties as mol_properties
 
 
 # ----------------------------------------------------------------------------------------------------------------------

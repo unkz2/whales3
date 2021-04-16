@@ -1,6 +1,6 @@
 import unittest
 
-from retrieve_drugs import search_chembl
+from whales3.retrieve_drugs import search_chembl
 
 
 class TestWhales(unittest.TestCase): 

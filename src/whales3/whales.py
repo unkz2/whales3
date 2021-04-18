@@ -37,7 +37,7 @@ class Whales:
         with open(self.drug_file, "r") as file:
             mol = file.read()
 
-        self.template = Chem.MolFromSmiles(self.drug_file)
+        self.template = Chem.MolFromSmiles(mol)
 
     def error_in_template(self):
         """Retrieve errors in template structure."""

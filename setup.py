@@ -2,7 +2,6 @@
 
 from distutils.core import setup
 
-
 setup(name='whales3',
       version='1.0',
       description='whales3',

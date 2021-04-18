@@ -34,8 +34,8 @@ class Whales:
     def read_template(self):
         """Read the template mol file."""
 
-        # with open(self.drug_file, "r") as file:
-        #     mol = file.read()
+        with open(self.drug_file, "r") as file:
+            mol = file.read()
 
         self.template = Chem.MolFromSmiles(self.drug_file)
 

@@ -1,8 +1,9 @@
+import unittest
+
+import numpy as np
+from rdkit import Chem
 from whales3.do_whales import whales_from_mol as whales
 from whales3.mol_properties_2 import whales_from_mol
-from rdkit import Chem
-import numpy as np
-import unittest
 
 
 class TestMolProperties(unittest.TestCase):

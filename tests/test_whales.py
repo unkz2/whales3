@@ -17,7 +17,7 @@ class TestWhales(unittest.TestCase):
 
     def test_read_template(self):
         # Benzene mol to be tested with the class from bezene file
-        mol = "C1CCCCC1"
+        mol = "COc1ccc2[nH]cc(CCN(C)C)c2c1"
         self.whales_inst.read_template()
         self.assertEqual(Chem.MolToSmiles(self.whales_inst.template), mol)
 

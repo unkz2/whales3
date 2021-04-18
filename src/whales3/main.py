@@ -8,7 +8,7 @@ from retrieve_drugs import mols_2_sdf, search_chembl
 from whales import Whales
 
 
-def main(): 
+def main():
     print("Initating WHALES.")
     drug_args = parse_args()
     out_dir = Path(drug_args.out)
@@ -25,6 +25,5 @@ def main():
     whales_inst.run()
 
 
-
-if __name__ == '__main__': 
+if __name__ == '__main__':
     main()

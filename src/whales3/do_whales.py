@@ -6,9 +6,9 @@
 # molecules contained in an rdkit supplier.
 #
 # Francesca Grisoni, May 2018, ETH Zurich & University of Milano-Bicocca, francesca.grisoni@unimib.it
-# please cite as: 
-#   Francesca Grisoni, Daniel Merk, Viviana Consonni, Jan A. Hiss, Sara Giani Tagliabue, Roberto Todeschini & Gisbert Schneider 
-#   "Scaffold hopping from natural products to synthetic mimetics by holistic molecular similarity", 
+# please cite as:
+#   Francesca Grisoni, Daniel Merk, Viviana Consonni, Jan A. Hiss, Sara Giani Tagliabue, Roberto Todeschini & Gisbert Schneider
+#   "Scaffold hopping from natural products to synthetic mimetics by holistic molecular similarity",
 #   Nature Communications Chemistry 1, 44, 2018.
 # ======================================================================================================================
 
@@ -35,7 +35,8 @@ def whales_from_mol(mol, charge_threshold=0, do_charge=True, property_name=''):
         print('Molecule not loaded.')
     elif err == 0:
         # coordinates and partial charges (checks for computed charges)
-        coords, w, mol_err = mol_properties.get_coordinates_and_prop(mol, property_name, do_charge)
+        coords, w, mol_err = mol_properties.get_coordinates_and_prop(
+            mol, property_name, do_charge)
         if mol_err > 0:
             x = np.full((33,), -999.0)
             print('No computed charges.')
@@ -54,7 +55,8 @@ def import_mol(mol):
         err = 1
     else:
         # sanitize
-        sanit_fail = Chem.SanitizeMol(mol, catchErrors=True, sanitizeOps=san_opt)
+        sanit_fail = Chem.SanitizeMol(
+            mol, catchErrors=True, sanitizeOps=san_opt)
         if sanit_fail:
             raise ValueError(sanit_fail)
             err = 1
@@ -127,7 +129,8 @@ def extract_lcm(data, start=0, end=100, step=10, lab_string=''):
     # Calculates percentiles according to the specified settings
     perc = range(start, end + 1, step)
     x = np.percentile(data, list(perc), axis=0)
-    x = np.concatenate((x[:, 0], x[:, 1], x[:, 2]), axis=0)  # Flattens preserving the ordering
+    # Flattens preserving the ordering
+    x = np.concatenate((x[:, 0], x[:, 1], x[:, 2]), axis=0)
 
     # rounds the descriptors to the third decimal place
     x = np.round(x, 3)
@@ -140,4 +143,3 @@ def extract_lcm(data, start=0, end=100, step=10, lab_string=''):
             labels.append(j + lab_string + str(int(i / 10)))
 
     return x, labels
-

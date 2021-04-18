@@ -12,11 +12,12 @@ def main():
     mols_2_sdf(mols, "ds.sdf")
 
 
-def search_chembl(query_compounds, num_compounds=100): 
+def search_chembl(query_compounds, num_compounds=100):
     url = f"https://www.ebi.ac.uk/chembl/api/data/molecule.json?limit={num_compounds}/search?format=json&q="
     query = url + query_compounds
 
-    response = requests.get(query, headers={ "Content-Type" : "application/json"})
+    response = requests.get(
+        query, headers={"Content-Type": "application/json"})
 
     return get_mol(response)
 
@@ -41,13 +42,12 @@ def get_mol(r):
     return molfiles
 
 
-def mols_2_sdf(mols, file_name): 
-    with open(file_name, "w") as output: 
-        for mol in mols: 
+def mols_2_sdf(mols, file_name):
+    with open(file_name, "w") as output:
+        for mol in mols:
             output.write(mol)
             output.write("$$$$\n")
 
 
-
-if __name__ == "__main__": 
+if __name__ == "__main__":
     main()

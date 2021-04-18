@@ -46,7 +46,7 @@ def get_coordinates_and_prop(mol, property_name='partial_charges', do_charge=Tru
 
             # gets atomic properties
             w[atom] = mol.GetAtomWithIdx(atom).GetProp(property_name)
-            
+
         # checks the weight values computed and throws and error if they are all 0
         if all(v == 0 for v in w):
             err = 1
@@ -91,7 +91,8 @@ def prepare_mol(mol, property_name, do_charge):
                 n_at = mol.GetNumAtoms()
                 # takes properties
                 list_prop = mol.GetPropsAsDict()
-                string_values = list_prop[property_name]  # extracts the property according to the set name
+                # extracts the property according to the set name
+                string_values = list_prop[property_name]
                 string_values = string_values.split("\n")
                 w = np.asarray(map(float, string_values))
         else:
@@ -124,7 +125,8 @@ def check_mol(mol, property_name, do_charge):
     n_at = mol.GetNumAtoms()
     if do_charge is False:
         list_prop = mol.GetPropsAsDict()
-        string_values = list_prop[property_name]  # extracts the property according to the set name
+        # extracts the property according to the set name
+        string_values = list_prop[property_name]
         if string_values == '' or string_values == ['']:
             err = 1
         else:
@@ -147,4 +149,3 @@ def check_mol(mol, property_name, do_charge):
         err = 1
 
     return err
-

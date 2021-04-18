@@ -9,9 +9,9 @@
 # atoms.
 #
 # Francesca Grisoni, May 2018, ETH Zurich & University of Milano-Bicocca, francesca.grisoni@unimib.it
-# please cite as: 
-#   Francesca Grisoni, Daniel Merk, Viviana Consonni, Jan A. Hiss, Sara Giani Tagliabue, Roberto Todeschini & Gisbert Schneider 
-#   "Scaffold hopping from natural products to synthetic mimetics by holistic molecular similarity", 
+# please cite as:
+#   Francesca Grisoni, Daniel Merk, Viviana Consonni, Jan A. Hiss, Sara Giani Tagliabue, Roberto Todeschini & Gisbert Schneider
+#   "Scaffold hopping from natural products to synthetic mimetics by holistic molecular similarity",
 #   Nature Communications Chemistry 1, 44, 2018.
 # ======================================================================================================================
 import numpy as np
@@ -52,8 +52,10 @@ def lmahal(x, w):
                 dist[i, j] = d / p
 
         # isolation and remoteness parameters from D
-        isol, rem, ir_ratio = is_rem(dist, n)   # calculates atomic parameters from the distance
-        res = np.concatenate((rem, isol, ir_ratio), axis=1)   # results concatenation
+        # calculates atomic parameters from the distance
+        isol, rem, ir_ratio = is_rem(dist, n)
+        # results concatenation
+        res = np.concatenate((rem, isol, ir_ratio), axis=1)
     else:
         res = np.full((1, 3), -999.0)   # sets missing values
 
@@ -99,7 +101,8 @@ def docov(x, w):
             for k in range(p):
                 cvhere = 0
                 for s in range(n):
-                    cvhere += w_abs[s] * (x[s, j] - x[i, j]) * (x[s, k] - x[i, k])
+                    cvhere += w_abs[s] * \
+                        (x[s, j] - x[i, j]) * (x[s, k] - x[i, k])
                 samp_v[j, k] = cvhere
         cov[i, 1] = samp_v
         samp_v = np.zeros((p, p))   # re-init
@@ -126,7 +129,8 @@ def domahal(i, j, x, cov):
     sv = np.linalg.pinv(cov[j, 1])   # pseudo inverse of covariance
     res = x[i, :] - x[j, :]
     d1 = np.dot(res, sv)   # first part of the matrix product
-    d = np.dot(d1, res[np.newaxis, :].T)   # transpose and product # TODO write it better
+    # transpose and product # TODO write it better
+    d = np.dot(d1, res[np.newaxis, :].T)
 
     return d
 
@@ -153,9 +157,10 @@ def is_rem(dist, n):  # TODO remove n and calculate it here
         dist[i, i] = None
 
     dist = np.matrix(dist)
-    isol = np.transpose(np.nanmin(dist, axis=0))  # col minimum (transposed for dimensions)
+    # col minimum (transposed for dimensions)
+    isol = np.transpose(np.nanmin(dist, axis=0))
     rem = np.nanmean(dist, axis=1)  # row average
-    ir_ratio = isol/rem  # ratio between isol and rem (transpose for dimensions)
+    # ratio between isol and rem (transpose for dimensions)
+    ir_ratio = isol/rem
 
     return isol, rem, ir_ratio
-
